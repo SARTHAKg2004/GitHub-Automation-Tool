@@ -1,0 +1,39 @@
+name: AI Repo Scanner (Incremental)
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo_url:
+        description: "GitHub repository URL to scan"
+        required: true
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Scanner Repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Create uploads folder
+        run: mkdir -p uploads
+
+      - name: Run Scanner (Incremental)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python main.py --url "${{ github.event.inputs.repo_url }}" --dashboard False
+
+      - name: Upload Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: scan-report
+          path: uploads/
