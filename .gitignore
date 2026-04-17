@@ -1,0 +1,16 @@
+# Ignore database files
+database/*.db
+*.db
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment files
+.env
+
+# Logs
+*.log
+
+# Excel outputs
+*.xlsx
